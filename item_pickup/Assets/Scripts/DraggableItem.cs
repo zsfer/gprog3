@@ -42,5 +42,13 @@ public class DraggableItem : Interactable
         }
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.collider.CompareTag("Guy"))
+        {
+            other.collider.GetComponentInParent<FollowAI>().Kill();
+        }
+    }
+
 
 }
