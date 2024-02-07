@@ -8,6 +8,8 @@ public class FollowAI : MonoBehaviour
     Transform _player;
     ActiveRagdollBone _ragdoll;
 
+    Coroutine _deathCorotuine;
+
     void Start()
     {
         _agent = GetComponentInChildren<NavMeshAgent>();
@@ -21,16 +23,22 @@ public class FollowAI : MonoBehaviour
         _agent.SetDestination(_player.position);
     }
 
-    public void Kill()
+    public void Kill(float seconds = 5)
     {
-        StartCoroutine(KillAnim());
+        if (_deathCorotuine != null)
+        {
+            StopCoroutine(_deathCorotuine);
+            _deathCorotuine = null;
+        }
+
+        _deathCorotuine = StartCoroutine(KillAnim(seconds));
     }
 
-    IEnumerator KillAnim()
+    IEnumerator KillAnim(float seconds)
     {
         _ragdoll.enabled = false;
         _agent.isStopped = true;
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(seconds);
         _ragdoll.enabled = true;
         _agent.isStopped = false;
     }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6406383077302527421}
   - component: {fileID: 4086847458623930066}
   - component: {fileID: 6257672352854453683}
+  - component: {fileID: 5536501436241776053}
   m_Layer: 3
   m_Name: Bouncy ass ball
   m_TagString: Interactable
@@ -147,3 +148,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dragForce: 10000
+--- !u!114 &5536501436241776053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6947253836787086133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 596847172f74f664ab5363eb26ce63e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
