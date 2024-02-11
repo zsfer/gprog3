@@ -35,6 +35,7 @@ public class DraggableItem : Interactable
             _rb.AddForce(_dragForce * Time.deltaTime * dir);
         }
 
+        // throw
         if (Input.GetMouseButtonDown(0))
         {
             Interact(false);
