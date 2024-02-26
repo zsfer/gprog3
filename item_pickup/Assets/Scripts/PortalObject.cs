@@ -15,6 +15,8 @@ public class PortalObject : MonoBehaviour
     Collider _col;
 
     Quaternion flip = Quaternion.Euler(0, 180, 0);
+
+    int _portalEnterCount = 0;
     void Awake()
     {
         _clone = new GameObject();
@@ -44,6 +46,10 @@ public class PortalObject : MonoBehaviour
 
             _clone.transform.SetPositionAndRotation(_outPortal.transform.TransformPoint(pos), _outPortal.transform.rotation * rot);
         }
+        else
+        {
+            _clone.transform.position = Vector3.one * 1000;
+        }
     }
 
     public void InPortal(Portal inPortal, Portal outPortal, Collider wall)
@@ -52,22 +58,36 @@ public class PortalObject : MonoBehaviour
         _outPortal = outPortal;
         Physics.IgnoreCollision(_col, wall);
 
-        _clone.SetActive(false);
+        _portalEnterCount++;
+        _clone.SetActive(true);
     }
 
     public void ExitPortal(Collider wall)
     {
         Physics.IgnoreCollision(_col, wall, false);
-        // _clone.SetActive(false);
+        _portalEnterCount--;
+        if (_portalEnterCount == 0)
+            _clone.SetActive(false);
     }
 
-    public void Warp()
+    public void Warp(Vector3 positionDifference)
     {
-        var pos = _inPortal.transform.InverseTransformPoint(transform.position);
-        pos = flip * pos;
+        if (_inPortal == null || _outPortal == null) return;
 
-        var rot = Quaternion.Inverse(_inPortal.transform.rotation) * transform.rotation;
-        rot *= flip;
+        // var pos = _inPortal.transform.InverseTransformPoint(transform.position);
+        // pos = flip * pos;
+        // _rb.position = _outPortal.transform.TransformPoint(pos);
+        var rotationDiff = -Quaternion.Angle(transform.rotation, _outPortal.transform.rotation);
+        rotationDiff += 180;
+        transform.Rotate(Vector3.up, rotationDiff);
+        // _rb.(Vector3.up, rotationDiff);
+
+        Vector3 positionOffset = Quaternion.Euler(0f, rotationDiff, 0f) * positionDifference;
+        _rb.position = _outPortal.transform.position + positionOffset;
+
+        // var rot = Quaternion.Inverse(_inPortal.transform.rotation) * transform.rotation;
+        // rot = flip * rot;
+        // _rb.rotation = _outPortal.transform.rotation * rot;
 
         var vel = _inPortal.transform.InverseTransformDirection(_rb.velocity);
         vel = flip * vel;

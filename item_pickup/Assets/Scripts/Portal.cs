@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public enum PortalType
@@ -26,12 +27,11 @@ public class Portal : MonoBehaviour
     {
         foreach (var obj in _objectsInPortal)
         {
-            var objPos = transform.InverseTransformPoint(obj.transform.position);
+            var posDiff = obj.transform.position - transform.position;
+            var dot = Vector3.Dot(transform.up, posDiff);
 
-            if (objPos.z > 0.0f)
-            {
-                obj.Warp();
-            }
+            if (dot < 0)
+                obj.Warp(posDiff);
         }
     }
 
@@ -41,7 +41,20 @@ public class Portal : MonoBehaviour
         if (other.TryGetComponent<PortalObject>(out var obj))
         {
             _objectsInPortal.Add(obj);
+
+            if (LinkedPortal == null) return;
             obj.InPortal(this, LinkedPortal.GetComponent<Portal>(), _wall);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        var obj = other.GetComponent<PortalObject>();
+
+        if (_objectsInPortal.Contains(obj))
+        {
+            _objectsInPortal.Remove(obj);
+            obj.ExitPortal(_wall);
         }
     }
 }

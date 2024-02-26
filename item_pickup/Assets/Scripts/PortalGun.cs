@@ -25,6 +25,7 @@ public class PortalGun : MonoBehaviour
     void CreatePortal(RaycastHit hit, GameObject portalPrefab, ref GameObject portal, PortalType type)
     {
         if (portal == null) portal = Instantiate(portalPrefab, hit.point, Quaternion.identity);
+
         portal.transform.SetPositionAndRotation(hit.point, Quaternion.FromToRotation(portal.transform.up, hit.normal) * portal.transform.rotation);
         portal.GetComponent<Portal>().SpawnPortal(hit.collider);
 
